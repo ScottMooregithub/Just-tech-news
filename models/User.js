@@ -9,24 +9,24 @@ User.init(
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: false,
+      primaryKey: true,
       autoIncrement: true,
     },
     username: {
-      type: Datatypes.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     email: {
-      type: Datatypes.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-    },
-    validate: {
-      isEmail: true,
+      validate: {
+        isEmail: true,
+      },
     },
     //define a password column
     password: {
-      type: Datatypes.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
         // this means the password must be at least four characterslong
