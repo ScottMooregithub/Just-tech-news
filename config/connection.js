@@ -1,5 +1,5 @@
 // import the sequelize constructor from the library
-const sequelize = require("sequelize");
+const Sequelize = require("sequelize");
 
 // create connection to our database, pass in your MySql information for username and password
 
