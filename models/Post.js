@@ -28,6 +28,7 @@ Post.init(
     user_id: {
       type: DataTypes.INTEGER,
       references: {
+        // should be user not working... sequelize has issue pluralizing user
         model: "user",
         key: "id",
       },
