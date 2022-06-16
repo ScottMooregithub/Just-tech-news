@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const { Post, User, Vote, Comment } = require("../../models");
 const sequelize = require("../../config/connection");
+const { update } = require("../../models/User");
 
 // get all users
 router.get("/", (req, res) => {
@@ -22,7 +23,7 @@ router.get("/", (req, res) => {
     include: [
       {
         model: Comment,
-        attributes: ["id", "comment_text", "post_id", "uder_id", "created_at"],
+        attributes: ["id", "comment_text", "post_id", "user_id", "created_at"],
         include: {
           model: User,
           attributes: ["username"],
@@ -95,35 +96,19 @@ router.post("/", (req, res) => {
 
 // PUT /api/posts/upvote
 router.put("/upvote", (req, res) => {
-  Vote.create({
-    user_id: req.body.user_id,
-    post_id: req.body.post_id,
-  }).then(() => {
-    // then find the post we just voted on
-    return Post.findOne({
-      where: {
-        id: req.body.post_id,
-      },
-      attributes: [
-        "id",
-        "post_url",
-        "title",
-        "created_at",
-        // use raw MySql aggregate function to query to get a count
-        [
-          sequelize.literal(
-            "(SELECT COUNT(*) FROM vote WHERE post.id = vote.post_id)"
-          ),
-          "vote_count",
-        ],
-      ],
-    })
-      .then((dbPostData) => res.json(dbPostData))
+  // make sure the session exists first
+  if (req.session) {
+    // pass session id along with all destructured properties on req.body
+    Post.upvote(
+      { ...req.body, user_id: req.session.user.id },
+      { Vote, Comment, User }
+    )
+      .then((updateVoteData) => res.json(updateVoteData))
       .catch((err) => {
         console.log(err);
-        res.status(400).json(err);
+        res.status(500).json(err);
       });
-  });
+  }
 });
 
 router.put("/:id", (req, res) => {
