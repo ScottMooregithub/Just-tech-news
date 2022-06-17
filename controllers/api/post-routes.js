@@ -100,7 +100,7 @@ router.put("/upvote", (req, res) => {
   if (req.session) {
     // pass session id along with all destructured properties on req.body
     Post.upvote(
-      { ...req.body, user_id: req.session.user.id },
+      { ...req.body, user_id: req.session.user_id },
       { Vote, Comment, User }
     )
       .then((updateVoteData) => res.json(updateVoteData))
