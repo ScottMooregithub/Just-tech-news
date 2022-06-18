@@ -112,6 +112,7 @@ router.put("/upvote", (req, res) => {
 });
 
 router.put("/:id", (req, res) => {
+  console.log("---------------");
   Post.update(
     {
       title: req.body.title,
